@@ -1,0 +1,3 @@
+# DO NOT INCLUDE SLASHES AFTER FOLDERNAMES
+_tests/newsuk/ajax.svg-to-base64.php
+_tests/newsuk/ajax-thumbnailgrid.php 109

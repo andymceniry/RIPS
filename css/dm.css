@@ -1,0 +1,22 @@
+.hide { display:none; }
+input[type="text"], select { padding: 5px; width: 100%; }
+ul { list-style-type: none; padding: 0 10px; }
+.vulntitle { color: #FF0000; margin-left: 10px; }
+.menushade { margin-bottom: 10px; }
+.filename { text-decoration: none; font-weight: normal; }
+.codebox { margin-bottom:0px; }
+.plusico { height: 12px; }
+.userinput, .persistent { margin-top: 5px; }
+.code li { margin-top:10px; }
+.link { color: #000088; font-weight: bold; text-decoration: none; }
+.userinput, .persistent { list-style-type: none; }
+td.before-vulntitle { padding:5px 0; }
+.fileico, .minusico, .plusico, .exploit, .help, .hotpatch, .dataleak { margin: 4px 2px; }
+.buttonbox { margin-top: 10px; }
+.stats { right:80px; }
+.iconbox { position: absolute; right: 0; width: 50px; margin-right: 10px; }
+
+#stats .button { text-align: center; width: 20px; height: 22px; margin-top: -7px; margin-right: -2px; }
+#window2 .closebutton { text-align: center; width: 20px; height: 22px; margin-top: -4px; margin-right: -18px; }
+#window1 .closebutton { text-align: center; width: 20px; height: 22px; margin-top: -4px; margin-right: -18px; }
+#windowcontent1 { width: 1080px; }
