@@ -362,8 +362,8 @@ You should have received a copy of the GNU General Public License along with thi
 				if(key($output) != "" && !empty($output[key($output)]) && fileHasVulns($output[key($output)]))
 				{		
 					echo '<div class="filebox">',
-					'<span class="filename">File: ',key($output),'</span><br>',
-					'<div id="',key($output),'"><br>';
+					'<span class="filename">File: ',key($output),'</span>',
+					'<div id="',key($output),'">';
 	
 					foreach($output[key($output)] as $vulnBlock)
 					{	
@@ -470,14 +470,14 @@ You should have received a copy of the GNU General Public License along with thi
 								echo '</li></ul></td></table></div>';
 							}
 							
-							echo '</div></div><div style="height:20px"></div>',"\n";
+							echo '</div></div><div style="height:10px"></div>',"\n";
 						}	
 					}
 
 					echo '</div><div class="buttonbox">',"\n",
 					'<input type="submit" class="Button" value="hide all" ',
 					'onClick="hide(\'',addslashes(key($output)),'\')">',"\n",
-					'</div></div><hr>',"\n";
+					'</div></div>',"\n";
 				}	
 				else if(count($output) == 1)
 				{

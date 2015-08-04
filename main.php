@@ -407,7 +407,31 @@ You should have received a copy of the GNU General Public License along with thi
 
 </div>
 
+<ul id="tabs" class="clearfix">
+    <li data-targetid="results" class="active">Results</li>
+    <li data-targetid="files">File List</li>
+    <li data-targetid="issues">Issue List</li>
+</ul>
+
+<div id="tab-results" class="tab-content">
 <?php 
 	// scan result
 	@printoutput($output, $_POST['treestyle']); 
 ?>
+</div>
+
+<div id="tab-files" class="tab-content hide">
+<p class="intro">List of files sorted by issue count.  Click the count number to view breakdown or on the filename to scan that file.</p>
+<?php 
+require_once 'dm.php';
+outputfiles();
+?>
+</div>
+
+<div id="tab-issues" class="tab-content hide">
+<p class="intro">List of issues sorted by count.  Click the count number to view breakdown or on the vulnerability to scan for just that type.</p>
+<?php 
+require_once 'dm.php';
+outputissues();
+?>
+</div>

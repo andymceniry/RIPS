@@ -764,10 +764,17 @@ class Scanner
 				$block = new VulnBlock($this->tif.'_'.$this->tokens[$i][2].'_'.basename($this->file_pointer), getVulnNodeTitle($category), $this->tokens[$i][1]);
 				$block->treenodes[] = $new_find;
 								
+
+                require_once 'dm.php';
+                addVuln(getVulnNodeTitle($category), str_replace('\\', '/', str_replace($_SESSION['root'], 'xxx', $this->file_name)));
+
+
 				if($userinput == 1 || $GLOBALS['verbosity'] == 4)
 				{
 					$block->vuln = true;
 					increaseVulnCounter($category);
+                                        require_once 'dm.php';
+                                        addVuln(getVulnNodeTitle($category), str_replace('\\', '/', str_replace($_SESSION['root'], '', $this->file_name)));
 				}
 								
 				$GLOBALS['output'][$this->file_name][] = $block;
@@ -1920,10 +1927,13 @@ class Scanner
 														$new_find->title = 'Userinput is passed through function parameters.';
 														
 													$block->treenodes[] = $new_find;
+
 													if(!$block->vuln && ($parameter_has_userinput || isset($this->scan_functions[$token_value][3]) || $GLOBALS['verbosity'] == 4))
 													{
 														$block->vuln = true;
 														increaseVulnCounter($block->sink);
+                                                        require_once 'dm.php';
+                                                        addVuln(getVulnNodeTitle($block->sink), str_replace('\\', '/', str_replace($_SESSION['root'], '', $this->file_name)));
 													}	
 													
 													$tree->foundcallee = true;
@@ -1940,26 +1950,34 @@ class Scanner
                                 $ignorename = str_replace('\\', '/', $ignorename);
                                 $ignorename .= ' ' . $this->tokens[$i][2];
 
+
                                 if (!in_array($ignorename, $_SESSION['ignorelist'])) {
 
-									if(empty($new_find->title))
+                                    if(!$_SESSION['get_type'] OR $_SESSION['get_type'] == getVulnNodeTitle($token_value)) {
 
+
+									if(empty($new_find->title)) {
 										$new_find->title = 'Userinput reaches sensitive sink. For more information, press the help icon on the left side.';
+                                    }
 									$block = new VulnBlock($this->tif.'_'.$this->tokens[$i][2].'_'.basename($this->file_pointer), getVulnNodeTitle($token_value), $token_value);
 									$block->treenodes[] = $new_find;
+
 									if($parameter_has_userinput || $GLOBALS['verbosity'] == 4)
 									{
 										$block->vuln = true;
 										increaseVulnCounter($token_value);
+                                        require_once 'dm.php';
+                                        addVuln(getVulnNodeTitle($token_value), str_replace('\\', '/', str_replace($_SESSION['root'], '', $this->file_name)));
+
 									}	
 									// if sink in var declare, offer a data leak scan - save infos for that
-									if(isset($vardeclare))
+									if(isset($vardeclare)) {
 										$block->dataleakvar = array($vardeclare['linenr'], $vardeclare['name']);
-
+                                    }
 
 
 									$GLOBALS['output'][$this->file_name][] = $block;
-
+}
 }
 								}
 								

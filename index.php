@@ -15,10 +15,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 **/
 require_once 'dm.php';
+unset($_SESSION['stats']);
+$_SESSION['get_url'] = isset($_GET['url']) ? $_GET['url'] : false;
+$_SESSION['get_type'] = isset($_GET['type']) ? $_GET['type'] : false;
+
+getIgnoreList();
+
 include 'config/general.php';
 
 $default_path = isset($_GET['url']) ? $_GET['url'] : $default_path;
-
+$default_stylesheet = 'notepad';
 
 
 ?><html>
@@ -35,6 +41,8 @@ $default_path = isset($_GET['url']) ? $_GET['url'] : $default_path;
 	}
 	?>
 	<link rel="stylesheet" type="text/css" href="css/dm.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.3.min.js"><\/script>')</script>
 	<script src="js/script.js"></script>
 	<script src="js/exploit.js"></script>
 	<script src="js/hotpatch.js"></script>
@@ -170,6 +178,10 @@ $default_path = isset($_GET['url']) ? $_GET['url'] : $default_path;
 
 <div id="result">
 	
+    <?php
+    if (!isset($_GET['url'])) {
+    ?>
+
 	<div style="margin-left:30px;color:#000000;font-size:14px">
 		<h3>Quickstart:</h3>
 		<p>Locate your local PHP source code <b>path/file</b> (e.g. <em>/var/www/project1/</em> or <em>/var/www/index.php</em>), choose the <b>vulnerability type</b> you are looking for and click <u>scan</u>!<br />
@@ -204,8 +216,19 @@ $default_path = isset($_GET['url']) ? $_GET['url'] : $default_path;
 		<li>Only tested with Firefox.</li>
 		</ul>
 	</div>
-	
+	<?php
+    }
+    ?>
 </div>
 
+<script src="js/dm.js"></script>
 </body>
 </html>
+
+<?php
+if (isset($_GET['url'])) {
+?>
+<script>scan(false);</script>
+<?php
+}
+?>
