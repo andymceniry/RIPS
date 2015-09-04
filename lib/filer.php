@@ -56,6 +56,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 		}  
+#die("<br/>".date("H:i:s").' => "'.__FILE__.'": Line '.__LINE__);
+
 		closedir($handle); 
 		return $result;  
 	}  

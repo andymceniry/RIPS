@@ -65,7 +65,7 @@ body, html {
 	
 .code,
 .phps-code, .phps-t-curly-open, .phps-t-dollar-open-curly-braces, .vulntitle
-	{color: #8000FF;  font-weight: bold;}
+	{color: #bbb;  font-weight: bold;}
 
 .phps-t-string,
 .phps-t-eval
@@ -156,7 +156,7 @@ body, html {
 .phps-t-class-c, 
 .phps-t-method-c, 
 .phps-t-ns-c
-	{color: #0000FF; font-weight:bold;}
+	{color: #000080; font-weight:bold;}
 	
 .phps-t-open-tag,
 .phps-t-close-tag
@@ -181,7 +181,7 @@ body, html {
 .phps-t-constant-encapsed-string,
 .phps-t-start-heredoc,
 .phps-t-end-heredoc
-	{color: #4A4A4A;}
+	{color: #008800;}
 
 .phps-t-inline-html
 	{color: #000000; font-weight:bold;}
@@ -189,4 +189,4 @@ body, html {
 .phps-t-comment,
 .phps-t-ml-comment,
 .phps-t-doc-comment
-	{color: #63C763; font-weight:normal;}
+	{color: #bbb; font-weight:normal;}

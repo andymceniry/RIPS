@@ -70,7 +70,7 @@ You should have received a copy of the GNU General Public License along with thi
 		} 
 		else if($udftitle)
 		{
-			$output.='<a class="link" style="text-decoration:none;" href="#'.$udftitle.'_declare" title="jump to declaration">&uArr;</a>&nbsp;';
+			$output.='<a class="link hide" style="text-decoration:none;" href="#'.$udftitle.'_declare" title="jump to declaration">&uArr;</a>&nbsp;';
 		}
 		
 		$var_count = 0;
@@ -104,7 +104,7 @@ You should have received a copy of the GNU General Public License along with thi
 						$reference = false;
 						$funcname = $tokens[$i+1][0] === T_STRING ? $tokens[$i+1][1] : $tokens[$i+2][1];
 						$output .= '<A NAME="'.$funcname.'_declare" class="jumplink"></A>';
-						$output .= '<a class="link" style="text-decoration:none;" href="#'.$funcname.'_call" title="jump to call">&dArr;</a>&nbsp;';
+						$output .= '<a class="link hide" style="text-decoration:none;" href="#'.$funcname.'_call" title="jump to call">&dArr;</a>&nbsp;';
 					}	
 					
 					$text = htmlentities($token[1], ENT_QUOTES, 'utf-8');

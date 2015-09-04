@@ -1,3 +1,2 @@
 # DO NOT INCLUDE SLASHES AFTER FOLDERNAMES
-_tests/newsuk/ajax.svg-to-base64.php
-_tests/newsuk/ajax-thumbnailgrid.php 109
+//DM-SERVER-DEV/WEBSITES/dmdev.newsint.co.uk/Website/html/api/index.php 999

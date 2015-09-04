@@ -18,6 +18,7 @@ td.before-vulntitle { padding:5px 0; }
 .stats { right:80px; }
 .iconbox { position: absolute; right: 0; width: 50px; margin-right: 20px; }
 .clickable { cursor:pointer; }
+#funccode { display:none !important; }
 
 #stats .button { text-align: center; width: 20px; height: 22px; margin-top: -7px; margin-right: -2px; }
 #window2 .closebutton { text-align: center; width: 20px; height: 22px; margin-top: -4px; margin-right: -18px; }
@@ -34,8 +35,10 @@ td.before-vulntitle { padding:5px 0; }
 .codebox { background:#FFF9E7; }
 .codebox:nth-child(even) { background:#F8F2E0; }
 .phps-t-function { color:#004080; }
-.phps-t-variable { color:#000080; }
-.link { color:#800080; }
+.phps-t-variable, .phps-tainted-var, .phps-t-if, .phps-t-empty { color:#000080; }
+.phps-t-string { text-decoration: none !important; }
+
+.link { color:#000; }
 
 #tab-files { border:1px solid #333; margin: 0 20px; background-color: #ccc; padding:0 10px 15px; }
 #tab-files ul { border:1px solid #333; margin: 10px 0; padding:0; }

@@ -34,7 +34,7 @@ function addVuln($vulnType, $fileName)
 
 function outputfiles()
 {
-    $_SESSION['stats']['vuln'] = arraySortByField($_SESSION['stats']['vuln'], 'count', 'DESC');
+    $_SESSION['stats']['files'] = arraySortByField($_SESSION['stats']['files'], 'count', 'DESC', true);
     echo '<ul>';
     foreach($_SESSION['stats']['files'] as $file => $data) {
         echo '<li><span class="count clickable jsShowItems">'.$data['count'].'</span> <a href="?url='.$file.'">'.$file.'</a>';
@@ -59,7 +59,7 @@ function outputfiles()
 
 function outputissues()
 {
-    $_SESSION['stats']['vuln'] = arraySortByField($_SESSION['stats']['vuln'], 'count', 'DESC');
+    $_SESSION['stats']['vuln'] = arraySortByField($_SESSION['stats']['vuln'], 'count', 'DESC', true);
     echo '<ul>';
     foreach($_SESSION['stats']['vuln'] as $issue => $data) {
         echo '<li><span class="count clickable jsShowItems">'.$data['count'].'</span> <a href="?url='.$_SESSION['get_url'].'&type='.$issue.'">'.$issue.'</a>';
