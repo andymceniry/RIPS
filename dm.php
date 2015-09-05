@@ -54,7 +54,7 @@ function outputfiles()
         echo '</li>';
     }
     echo '</ul>';
-
+    updateFavicon();
 }
 
 function outputissues()
@@ -79,9 +79,14 @@ function outputissues()
         echo '</li>';
     }
     echo '</ul>';
-
+    updateFavicon();
 }
 
+function updateFavicon()
+{
+    echo "<script>alert('updateFavicon');</script>";
+
+}
 function arraySortByField($aArrayToSort, $sKeyToSort, $sDir = 'a', $bIsNumber = false)
 {
 

@@ -37,7 +37,6 @@ function handleResponse(idprefix) {
 		var newline = lines[lines.length-2];
 
 		if(newline == 'STATS_DONE.') {				
-			console.log("done");
 			stats_done = true;
 			return;	
 		} else if(newline != undefined)
@@ -854,6 +853,7 @@ var myData = Array();
 	
 function generateDiagram()
 {
+
 	var canvas;
 	var ctx;
 	var lastend = 0;
@@ -870,11 +870,17 @@ function generateDiagram()
 		else
 			myData[j] = 0;
 	}
-	
+
+    if (myTotal > 0) {
+        updateFavicon(false);
+    } else {
+        updateFavicon(true);
+    }
+
 	canvas = document.getElementById("diagram");
 	ctx = canvas.getContext("2d");
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	
+	console.log('a');
 	for (var i = 0; i < myData.length; i++)
 	{
 		if(myData[i] != 0)
@@ -889,4 +895,14 @@ function generateDiagram()
 			lastend += Math.PI*2*(myData[i]/myTotal);
 		}
 	}
+
 }
+
+function updateFavicon(clean) {
+    var link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = clean ? 'img/tick.ico' : 'img/cross.ico';
+    document.getElementsByTagName('head')[0].appendChild(link);
+
+};
