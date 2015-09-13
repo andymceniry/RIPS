@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 **/
 require_once 'dm.php';
+include_once('dm_functions.php');
 unset($_SESSION['stats']);
 $_SESSION['get_url'] = isset($_GET['url']) ? $_GET['url'] : false;
 $_SESSION['get_type'] = isset($_GET['type']) ? $_GET['type'] : false;
@@ -22,6 +23,11 @@ $_SESSION['get_type'] = isset($_GET['type']) ? $_GET['type'] : false;
 getIgnoreList();
 
 include 'config/general.php';
+
+if (isset($_GET['filetosniff'])) {
+    $_GET['url'] = $_GET['path'] .'/'.$_GET['filetosniff'];
+    $_SESSION['geturl'] = $_GET['url'];
+}
 
 $default_path = isset($_GET['url']) ? $_GET['url'] : $default_path;
 $default_stylesheet = 'notepad';
@@ -51,7 +57,9 @@ $default_stylesheet = 'notepad';
 </head>
 <body>
 
-<div class="menu">
+   
+    
+<div class="menu hide">
 	<div style="float:left; width:100%;">
 	<table width="100%">
 	<tr><td width="75%" nowrap>
@@ -170,52 +178,162 @@ $default_stylesheet = 'notepad';
 	
 	<div style="clear:left;"></div>
 </div>
-<div class="menushade"></div>
+<div class="menushade hide"></div>
+<?php
 
+
+
+        if (isset($_GET['dir'])) {
+            if ($_GET['dir'] == 'previous') {
+                $dir = dirname($_GET['path']);    
+            } elseif ($_GET['dir'] == 'current') {
+                $dir = $_GET['path'];    
+            } elseif ($_GET['dir'] == 'next') {    
+                $dir = $_GET['path'] . '/' . $_GET['dir_name'];
+            }
+        } else {
+            $dir = dirname(getcwd());
+        }
+        
+        if (isset($_GET['filetosniff'])) {
+echo '<div class="infopath clearfix"><p>' . str_replace('\\', '/', $_GET['url']).'</p>';
+?>
+        <form action="<?php echo basename(__FILE__); ?>" method="get" class="header-back-btn">
+        <input type="hidden" name="path" value="<?php echo $dir; ?>" />    
+        <input type="hidden" name="dir" value="previous" />
+        <input type="image" src="img/back.png" class="submit_back" onclick="window.history.back();" />
+        </form>
+        <?php
+
+    echo '</div>';
+
+echo '<div id="dmscanning" class="report"><pre><div class="report_summary"> SCANNING... </div></pre></div>';
+
+    }
+    ?>
 <div class="scanning" id="scanning">scanning ...
 <div class="scanned" id="scanned"></div>
 </div>
+
+
+
 
 <div id="result">
 	
     <?php
     if (!isset($_GET['url'])) {
+        
+        if (isset($_GET['dir'])) {
+            if ($_GET['dir'] == 'previous') {
+                $dir = dirname($_GET['path']);    
+            } elseif ($_GET['dir'] == 'current') {
+                $dir = $_GET['path'];    
+            } elseif ($_GET['dir'] == 'next') {    
+                $dir = $_GET['path'] . '/' . $_GET['dir_name'];
+            }
+        } else {
+            $dir = dirname(getcwd());
+        }
+
+        
+        
+if (is_dir($dir) AND $handle = opendir($dir)) {
+echo '<div class="infopath clearfix"><p>' . str_replace('\\', '/', $dir).'</p>';
+    if ($dir != dirname(getcwd())) {
+        ?>
+        <form action="<?php echo basename(__FILE__); ?>" method="get" class="header-back-btn">
+        <input type="hidden" name="path" value="<?php echo $dir; ?>" />    
+        <input type="hidden" name="dir" value="previous" />
+        <input type="image" src="img/back.png" class="submit_back" />
+        </form>
+        <?php
+    }
+    echo '</div>';
+
+    echo '<div class="entry_row_holder">';
+
+    $extensionstosniff = array('php');
+    
+    $folders = array();
+    $files = array();
+    while (false !== ($entry = readdir($handle))) {
+        if ($entry != "." && $entry != ".." && $entry != "webcodesniffer") {
+            if (is_dir($dir."/".$entry) === true) {
+                    $folders[] = $entry;
+                } else {
+                    if (in_array(pathinfo($dir."/".$entry, PATHINFO_EXTENSION), $extensionstosniff)) {
+                        $files[] = $entry;
+                    }
+            }
+        }
+    }
+
+
+    sort($folders);
+    foreach($folders as $entry) {
+        ?>
+        <div class='entry_row_dir'>
+            <input type="hidden" name="dir" value="next" />
+            <a class="folder_link" href="?path=<?php echo $dir;?>&dir=next&dir_name=<?php echo $entry; ?>"/><?php echo $entry; ?></a>
+        </div>
+        <?php 
+    }
+
+
+    sort($files);
+    foreach($files as $entry) {
+            ?>
+            <div class='entry_row_filetosniff'>
+                <div class='entry_name'><a class="file_link" href="?path=<?php echo $dir;?>&standard=DM&sniff=TEST&dir=current&filetosniff=<?php echo $entry; ?>"/><?php echo $entry; ?></a></div>
+                <div class="entry_history">
+                <?php
+                $filename = $dir.'/'.$entry;
+                $file_last_change = date("F d Y H:i:s.", filemtime($filename));
+                $log_filename = getLogFilename($filename);
+                $log_filename = 'logs/'.urlencode($log_filename);
+
+                if (file_exists($log_filename)) {
+                    $fp = fopen($log_filename, 'r');
+                    $fp_content = array();
+                    while(! feof($fp)) {
+                        $fp_content[] = fgets($fp);
+                    }
+                    fclose($fp);
+                    if (date('U', strtotime($fp_content[0])) != date('U', strtotime($file_last_change))) {
+                        echo '<span class="out-of-date">out of date</span>';
+                    } else {
+                        if ($fp_content[1] == 0 AND $fp_content[2] == 0) {
+                            echo '<span class="all-good">all good</span>';
+                        } else {
+                            echo '<span class="warning">'.$fp_content[2].'</span>';
+                            echo '<span class="error">'.$fp_content[1].'</span>';
+                        }
+                    }
+                } else {
+                    echo '<span class="not-tested">not tested</span>';
+                }
+
+                ?>
+                </div>
+                <br style='clear:both;' />
+            </div>
+            <?php
+    }
+
+    if (count($folders) < 1 AND count($files) < 1) {
+        echo '<p><b> &nbsp; &nbsp; &nbsp; no matching files or folders found.</b></p>';
+    }
+
+    echo '</div>';
+} else {
+    echo "<p>Invalid Directory '$dir'</p>";
+    echo "<p>Redirecting...</p>";
+}
+
+
+
     ?>
 
-	<div style="margin-left:30px;color:#000000;font-size:14px">
-		<h3>Quickstart:</h3>
-		<p>Locate your local PHP source code <b>path/file</b> (e.g. <em>/var/www/project1/</em> or <em>/var/www/index.php</em>), choose the <b>vulnerability type</b> you are looking for and click <u>scan</u>!<br />
-		Check <b>subdirs</b> to include all subdirectories into the scan. It is recommended to scan only the root directory of your project. Files in subdirectories will be automatically scanned by RIPS when included by the PHP code. However enabling <b>subdirs</b> can improve the scan result and the include success rate (shown in the result).</p>
-		<h3>Advanced:</h3>
-		<p>Debug errors or improve your scan result by choosing a different <b>verbosity level</b> (default level 1 is recommended).<br />
-		After the scan finished 4 new button will appear in the upper right. You can select between different types of vulnerabilities that have been found by clicking on their name in the <b>stats</b> window. You can click <b>user input</b> in the upper right to get a list of entry points, <b>functions</b> for a list and graph of all user defined functions or <b>files</b> for a list and graph of all scanned files and their includes. All lists are referenced to the Code Viewer.</p>
-		<h3>Style:</h3>
-		<p>Change the syntax highlighting schema on-the-fly by selecting a different <b>code style</b>.<br />
-		Before scanning you can choose which way the code flow should be displayed: <b>bottom-up</b> or <b>top-down</b>.</p>
-		<h3>Icons:</h3>
-		<ul>
-		<li class="userinput"><font color="black"><b>User input</b> has been found in this line. Potential entry point for vulnerability exploitation.</font></li>
-		<li class="functioninput"><font color="black">Vulnerability exploitation depends on the <b>parameters</b> passed to the function declared in this line. Have a look at the calls in the scan result.<br />Click <b>&uArr;</b> or <b>&dArr;</b> to jump to the next declaration or call of this function.</font></li>
-		<li class="validated"><font color="black">User-implemented <b>securing</b> has been detected in this line. This may prevent exploitation.</font></li>
-		</ul>
-		<h3>Options:</h3>
-		<ul>
-		<li><div class="fileico"></div>&nbsp;Click the file icon to open the <b>Code Viewer</b> to review the original code. A new window will be opened with all relevant lines highlighted.<br />
-		Highlight variables temporarily by mouseover or persistently by clicking on the variable. Jump into the code of a user-defined function by clicking on the call. Click <u>return</u> on the bottom of the code viewer to jump back. This also works for nested function calls.</li>
-		<li><div class="minusico"></div>&nbsp;Click the minimize icon to <b>hide</b> a specific code trace. You may display it later by clicking the icon again.</li>
-		<li><div class="exploit"></div>&nbsp;Click the target icon to open the <b>Exploit Creator</b>. A new window will open where you can enter exploit details and create PHP Curl exploit code.</li>
-		<li><div class="help"></div>&nbsp;Click the help icon to get a <b>description</b>, example code, example exploitation, patch and related securing functions for this vulnerability type.</li>
-		<li><div class="dataleak"></div>&nbsp;Click the data leak icon to check if the output of the tainted sink <b>leaks</b> somewhere (is embedded to the HTTP response via echo/print).</li>
-		</ul>
-		<h3>Hints:</h3>
-		<ul>
-		<li>RIPS implements <i>static</i> source code analysis. It only scans source code files and will not execute the code.</li>
-		<li>Object-oriented code (classes) is not supported in this version.</li>
-		<li>Make sure RIPS has file permissions on the files to be scanned.</li>
-		<li>Don't leave the webinterface of RIPS open to the public internet. Use it on your <b>local</b> webserver only.</li>
-		<li>Only tested with Firefox.</li>
-		</ul>
-	</div>
 	<?php
     }
     ?>

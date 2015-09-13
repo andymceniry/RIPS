@@ -57,9 +57,43 @@ function outputfiles()
     updateFavicon();
 }
 
+
+
+function getLogFilename($filename)
+{
+    $log_filename = $filename;
+    $log_filename = str_replace('\\', '_', $log_filename);
+    $log_filename = str_replace('/', '_', $log_filename);
+    $log_filename = str_replace('___', '_', $log_filename);
+    $log_filename = str_replace(':', '', $log_filename);
+    $log_filename = str_replace('__', '_', $log_filename);
+    $log_filename = urlencode($log_filename);
+    return $log_filename;
+
+}
+
+function logResults($filename, $errors, $warnings, $log_folder = 'logs' )
+{
+    if (!is_dir($log_folder)) {
+        echo '<h2>Warning: Log folder not found - Create a folder called "logs".</h2>';
+        return false;
+    }
+    $log_filename = getLogFilename($filename);
+    $fp = fopen($log_folder.'/'.$log_filename, 'w');
+    $file_last_change = date("F d Y H:i:s.", filemtime($filename));
+    $file_error_count = $errors;
+    $file_warning_count = $warnings;
+    $log_content = "$file_last_change\n$file_error_count\n$file_warning_count";
+    fwrite($fp, $log_content);
+
+}
+
+
+
 function outputissues()
 {
     $_SESSION['stats']['vuln'] = arraySortByField($_SESSION['stats']['vuln'], 'count', 'DESC', true);
+    $total_issues = 0;
     echo '<ul>';
     foreach($_SESSION['stats']['vuln'] as $issue => $data) {
         echo '<li><span class="count clickable jsShowItems">'.$data['count'].'</span> <a href="?url='.$_SESSION['get_url'].'&type='.$issue.'">'.$issue.'</a>';
@@ -69,6 +103,7 @@ function outputissues()
                 $thisIssueCount[$issue2] = 0;
             }
             $thisIssueCount[$issue2]++;
+            $total_issues++;
         }
         arsort($thisIssueCount);
         echo '<span class="items hide">';
@@ -79,6 +114,7 @@ function outputissues()
         echo '</li>';
     }
     echo '</ul>';
+    logResults($_SESSION['geturl'], $total_issues, 0);
     updateFavicon();
 }
 

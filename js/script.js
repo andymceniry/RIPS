@@ -81,7 +81,7 @@ function scan(ignore_warning)
 	
 	document.getElementById("scanning").style.backgroundImage="url(css/scanning.gif)";
 	document.getElementById("scanning").innerHTML='scanning ...<div class="scanfile" id="scanfile"></div><div class="scanned" id="scanned"></div><div class="scanprogress" id="scanprogress"></div><div class="scantimeleft" id="scantimeleft"></div>'
-	document.getElementById("scanning").style.display="block";
+	//document.getElementById("scanning").style.display="block";
 	
 	prevDataLength = 0;
 	nextLine = '';
@@ -98,6 +98,7 @@ function scan(ignore_warning)
 			if(!this.responseText.match(/^\s*warning:/))
 			{
 				document.getElementById("scanning").style.display="none";
+                document.getElementById("dmscanning").style.display="none";
 				document.getElementById("options").style.display="";
 				
 				nostats = this.responseText.split("STATS_DONE.\n");
@@ -876,25 +877,6 @@ function generateDiagram()
     } else {
         updateFavicon(true);
     }
-
-	canvas = document.getElementById("diagram");
-	ctx = canvas.getContext("2d");
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	console.log('a');
-	for (var i = 0; i < myData.length; i++)
-	{
-		if(myData[i] != 0)
-		{
-			document.getElementById('chart'+(i+1)).style.backgroundColor = myColor[i];
-			ctx.fillStyle = myColor[i];
-			ctx.beginPath();
-			ctx.moveTo(45,35);
-			ctx.arc(45,35,35,lastend,lastend+(Math.PI*2*(myData[i]/myTotal)),false);
-			ctx.lineTo(45,35);
-			ctx.fill();
-			lastend += Math.PI*2*(myData[i]/myTotal);
-		}
-	}
 
 }
 

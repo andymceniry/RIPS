@@ -296,7 +296,7 @@ You should have received a copy of the GNU General Public License along with thi
 	<div id="funccodecontent"></div>
 </div>
 
-<div id="stats" class="stats">
+<div id="stats" class="stats hide">
 	<table class="textcolor" width="100%">
 		<tr>
 			<th align="left" style="font-size:22px;padding-left:10px">Result</th>
@@ -407,7 +407,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 </div>
 
-<ul id="tabs" class="clearfix">
+<ul id="tabszzz" class="clearfix hide">
     <li data-targetid="results" class="active">Results</li>
     <li data-targetid="files">File List</li>
     <li data-targetid="issues">Issue List</li>

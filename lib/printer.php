@@ -65,12 +65,12 @@ You should have received a copy of the GNU General Public License along with thi
 		$output = "<span class=\"linenr\">$line_nr:</span>&nbsp;";
 		if($title)
 		{
-			$output.='<a class="link" href="'.PHPDOC.$title.'" title="open php documentation" target=_blank>';
-			$output.="$title</a>&nbsp;";
+			$output.='<a class="link hide" href="'.PHPDOC.$title.'" title="open php documentation" target=_blank>';
+			$output.="$title</a>";
 		} 
 		else if($udftitle)
 		{
-			$output.='<a class="link hide" style="text-decoration:none;" href="#'.$udftitle.'_declare" title="jump to declaration">&uArr;</a>&nbsp;';
+			$output.='<a class="link hide" style="text-decoration:none;" href="#'.$udftitle.'_declare" title="jump to declaration">&uArr;</a>';
 		}
 		
 		$var_count = 0;
@@ -104,7 +104,7 @@ You should have received a copy of the GNU General Public License along with thi
 						$reference = false;
 						$funcname = $tokens[$i+1][0] === T_STRING ? $tokens[$i+1][1] : $tokens[$i+2][1];
 						$output .= '<A NAME="'.$funcname.'_declare" class="jumplink"></A>';
-						$output .= '<a class="link hide" style="text-decoration:none;" href="#'.$funcname.'_call" title="jump to call">&dArr;</a>&nbsp;';
+						$output .= '<a class="link hide" style="text-decoration:none;" href="#'.$funcname.'_call" title="jump to call">&dArr;</a>';
 					}	
 					
 					$text = htmlentities($token[1], ENT_QUOTES, 'utf-8');
@@ -325,7 +325,7 @@ You should have received a copy of the GNU General Public License along with thi
 	{
 		if(!empty($tree->dependencies))
 		{
-			echo '<ul><li><span class="requires">requires:</span>';
+			echo '<ul class="hide"><li class="lirequires"><span class="requires">requires:</span>';
 
 			foreach ($tree->dependencies as $linenr=>$dependency) 
 			{
@@ -362,9 +362,24 @@ You should have received a copy of the GNU General Public License along with thi
 				if(key($output) != "" && !empty($output[key($output)]) && fileHasVulns($output[key($output)]))
 				{		
 					echo '<div class="filebox">',
-					'<span class="filename">File: ',key($output),'</span>',
+					'<span class="filenames hide">File: ',key($output),'</span>',
 					'<div id="',key($output),'">';
+                    
+                    $total_issues = 0;
+                    $issuenames = array();
+                    foreach($_SESSION['stats']['vuln'] as $issue => $data) {
+                        $issuenames[] = $issue.' ('.$data['count'].')';
+                        $total_issues += $data['count'];
+                    }
+                    require_once 'dm_functions.php';
+                    $overview = 'Found ' . $total_issues . ' error';
+                    $overview .= $total_issues == 1 ? '' : 's';
+                    $overview .= ' of type';
+                    $overview .= count($issuenames) == 1 ? '' : 's';
+                    $overview .= ' ' . arrayToSentence($issuenames);
+                    echo '<pre class="report_summary"> '.strtoupper($overview).'</pre>';
 	
+    #echo "<br/>".str_replace ('  ', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',nl2br(var_export($_SESSION, TRUE)));die("<br/>".date("H:i:s").' => "'.__FILE__.'": Line '.__LINE__);
 					foreach($output[key($output)] as $vulnBlock)
 					{	
 						if($vulnBlock->vuln)	
@@ -384,7 +399,7 @@ You should have received a copy of the GNU General Public License along with thi
 								// if(empty($tree->funcdepend) || $tree->foundcallee )
 								{	
 									echo '<div class="codebox"><table border=0>',"\n",
-									'<tr><td class="iconbox" valign="top" nowrap>',"\n",
+									'<tr><td class="iconbox hide" valign="top" nowrap>',"\n",
 									'<div class="fileico" title="review code" ',
 									'onClick="openCodeViewer(this,\'',
 									addslashes($tree->filename), '\',\'',
@@ -481,14 +496,14 @@ You should have received a copy of the GNU General Public License along with thi
 				}	
 				else if(count($output) == 1)
 				{
-					echo '<div style="margin-left:30px;color:#000000">Nothing vulnerable found. Change the verbosity level or vulnerability type  and try again.</div>';
+					echo '<div class="report"><pre><div class="report_summary clean"> GREAT JOB. NO ERRORS FOUND :-) </div></pre></div>';
 				}
 			}
 			while(next($output));
 		}
 		else if(count($GLOBALS['scanned_files']) > 0)
 		{
-			echo '<div style="margin-left:30px;color:#000000">Nothing vulnerable found. Change the verbosity level or vulnerability type and try again.</div>';
+			echo '<div class="report"><pre><div class="report_summary clean"> GREAT JOB. NO ERRORS FOUND :-) </div></pre></div>';
 		}
 		else
 		{
