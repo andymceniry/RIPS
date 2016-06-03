@@ -25,6 +25,16 @@ getIgnoreList();
 include 'config/general.php';
 
 if (isset($_GET['filetosniff'])) {
+
+    //  check for open file
+    if (array_key_exists('view', $_GET) AND $_GET['view'] != '') {
+        $aTmp = explode('&view=', 'http://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        $return_url = $aTmp[0];
+        exec(urldecode($_GET['view']));
+        header("location: $return_url");
+        die();
+    }
+
     $_GET['url'] = $_GET['path'] .'/'.$_GET['filetosniff'];
     $_SESSION['geturl'] = $_GET['url'];
 }
@@ -196,7 +206,13 @@ $default_stylesheet = 'notepad';
         }
         
         if (isset($_GET['filetosniff'])) {
-echo '<div class="infopath clearfix"><p>' . str_replace('\\', '/', $_GET['url']).'</p>';
+
+    $file_anchor = str_replace('\\', '/', str_replace('//', '/', $dir)).'/'.$_GET['filetosniff'];
+    $file_link = "explorer+" . urlencode(str_replace('/', '\\', str_replace('//', '/', $dir . '\\' . $_GET['filetosniff'])));
+
+
+    #echo '<div class="infopath clearfix"><p>' . $file_anchor.'</p>';
+    echo '<div class="infopath clearfix"><p><a href="http://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'&view='.$file_link.'">' . $file_anchor .'</a></p>';
 ?>
         <form action="<?php echo basename(__FILE__); ?>" method="get" class="header-back-btn">
         <input type="hidden" name="path" value="<?php echo $dir; ?>" />    

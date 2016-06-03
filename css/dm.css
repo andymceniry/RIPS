@@ -182,6 +182,7 @@ pre { word-wrap: break-word; line-height: 24px; }
 .header-back-btn { float:right; }
 .infopath { margin:10px 0 15px; }
 .infopath p { float:left; line-height:20px; }
+.infopath p a { color:#fff;  }
 .infopath .submit_back { margin:0; }
 
 
